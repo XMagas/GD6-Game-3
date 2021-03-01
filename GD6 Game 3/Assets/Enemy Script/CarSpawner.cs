@@ -16,7 +16,7 @@ public class CarSpawner : MonoBehaviour
     void Update()
     {
 
-        if (NextTimeToSpawn >= Time.time)
+        if (NextTimeToSpawn <= Time.time)
         {
             SpawnCar();
             NextTimeToSpawn = Time.time + SpawnDelay;
