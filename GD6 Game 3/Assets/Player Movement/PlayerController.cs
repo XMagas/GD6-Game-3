@@ -1,15 +1,27 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+
 
 public class PlayerController : MonoBehaviour
 {
+    public AudioClip die;
+    public AudioClip mushroom_eating;
 
     public float MoveSpeed = 6;
 
     public Rigidbody2D rb;
 
     Vector2 movement;
+
+    public int maxHealth = 4;
+
+    public int currentHealth;
+
+    public HealthBar healthBar;
+
+
 
     [SerializeField]
     private GameObject drugs;
@@ -18,6 +30,10 @@ public class PlayerController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        currentHealth = maxHealth;
+        healthBar.SetHealth(maxHealth);
+
 
         SpawnDrugs();
 
@@ -48,19 +64,25 @@ public class PlayerController : MonoBehaviour
         if (collision.CompareTag("Drugs"))
         {
 
-            print("We took Drugs");
+            print("We Collided with Drugs");
+
+            SoundManager.Instance.PlayMusic(mushroom_eating);
 
             Destroy(collision.gameObject);
             SpawnDrugs();
+
+            Pickup();
+           
 
         }
 
 
         if(collision.tag == "Car")
         {
-             
 
+            TakeDamage(1);
 
+            SoundManager.Instance.PlayMusic(die);
 
         }
   
@@ -96,6 +118,42 @@ public class PlayerController : MonoBehaviour
 
     }
 
+
+
+    void TakeDamage(int damage)
+    {
+
+
+        currentHealth -= damage;
+
+        healthBar.SetHealth(currentHealth);
+
+        if(currentHealth == 0)
+        {
+
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+
+           
+
+            print("Game Over");
+
+
+        }
+
+
+    }
+
+
+    void Pickup()
+    {
+
+        print("We Got The Effects of Taking Drugs");
+
+        MoveSpeed = -6;
+
+
+
+    }
 
 
 }
